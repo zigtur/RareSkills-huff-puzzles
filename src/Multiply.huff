@@ -13,5 +13,72 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    // get 4 first bytes
+    0x00
+    calldataload
+    0xe0
+    shr
 
+    // multiply(uint256, uint256) selector
+    __FUNC_SIG(multiply)
+    eq
+    multiplication
+    // if selector is multiply, jump to multiplication
+    jumpi
+
+    // revert otherwise
+    0x00
+    0x00
+    revert
+
+    multiplication:
+        // Copy first argument in memory
+        0x20
+        0x04
+        0x00
+        calldatacopy
+
+        // Copy second argument in memory
+        0x20
+        0x24
+        0x20
+        calldatacopy
+
+        // load both argument (a and b)
+        0x00
+        mload
+        0x20
+        mload
+
+        // multiply (c = a * b)
+        mul
+        dup1
+
+        // load first argument (a) and divide result by it
+        // c / a
+        0x00
+        mload
+        swap1
+        div
+
+        // b == c / a ?
+        0x20
+        mload
+        eq
+
+        end
+        jumpi
+
+        0x6f766572666c6f77 0x40 mstore
+        0x20 0x40 revert
+
+
+    end:
+        // store result and return
+        0x40
+        mstore
+
+        0x20
+        0x40
+        return
 }

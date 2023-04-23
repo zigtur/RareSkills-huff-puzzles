@@ -9,5 +9,13 @@
 */
 
 #define macro MAIN() = takes(0) returns(0) {
-    
+    // Store calldata size in memory
+    callvalue           // This will store calldatasize on stack
+    0x00                // memory offset
+    mstore
+
+    0x20                // size
+    0x00                // memory offset
+    return
+
 }

@@ -8,5 +8,13 @@
  */
 
 #define macro MAIN() = takes(0) returns(0) {
-   
+   caller               // push caller balance on stack
+   balance              // pop caller on stack and push caller's balance on stack
+   0x00                 // push 0x00 (memory offset)
+   mstore               // store in memory
+
+    // Return value stored in memory
+   0x20                 // size
+   0x00                 // Memory offset
+   return
 }
