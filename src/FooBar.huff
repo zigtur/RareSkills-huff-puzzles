@@ -16,5 +16,30 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    // get 4 first bytes
+    0x00
+    calldataload
+    0xe0
+    shr
 
+    // foo()
+    dup1
+    __FUNC_SIG(foo) eq
+    foo jumpi
+    // bar()
+    __FUNC_SIG(bar) eq
+    bar jumpi
+    0x00 0x00 revert
+
+    foo:
+        pop
+        0x02 0x00 mstore
+        retvalue jump
+
+    bar:
+        0x03 0x00 mstore
+        retvalue jump
+
+    retvalue:
+        0x20 0x00 return
 }
