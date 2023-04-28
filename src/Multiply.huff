@@ -33,32 +33,16 @@
 
     multiplication:
         // Copy first argument in memory
-        0x20
-        0x04
-        0x00
-        calldatacopy
-        
-        // Copy second argument in memory
-        0x20
-        0x24
-        0x20
-        calldatacopy
-
-        // load both argument a and check != 0
-        0x00
-        mload
+        0x04 calldataload
         dup1
-        0x00
-        eq
+        iszero
         zero_case
         jumpi
-
-        // load both argument b and check != 0
-        0x20
-        mload
+        
+        // Copy second argument in memory
+        0x24 calldataload
         dup1
-        0x00
-        eq
+        iszero
         zero_case
         jumpi
 
@@ -68,14 +52,12 @@
 
         // load first argument (a) and divide result by it
         // c / a
-        0x00
-        mload
+        0x04 calldataload
         swap1
         div
 
         // b == c / a ?
-        0x20
-        mload
+        0x24 calldataload
         eq
 
         end
