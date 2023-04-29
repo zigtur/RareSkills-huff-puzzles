@@ -14,7 +14,7 @@
     0xe0
     shr
 
-    // maxOfArray(uint256[])
+    // donated(address)
     __FUNC_SIG(donated)
     eq
     donated jumpi
@@ -44,5 +44,4 @@
         0x00
         mstore
         0x20 0x00 return
-
 }
