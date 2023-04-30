@@ -13,5 +13,43 @@
 
 
  #define macro MAIN() = takes(0) returns(0) {
-    
+    // get 4 first bytes
+    0x00 calldataload
+    0xe0 shr
+
+    // makeContract()
+    __FUNC_SIG(makeContract)
+    eq makeContractLabel jumpi
+
+    // else revert
+    0x00 0x00 revert
+
+
+    makeContractLabel:
+        0x600c8060093d393df3620caffe60005260206000f30000000000000000000000
+        0x00 mstore
+
+        // deploy contract and get address
+        0x11 // salt
+        0x15 // size
+        0x00 // offset
+        0x00 // value
+        create2
+
+        // store address in memory
+        0x00 mstore
+        0x20 0x00 return
+
  }
+
+/*
+    Sub contract runtime code:
+        0x0caffe 0x00 mstore
+        0x20 0x00 return
+    
+        It gives the following bytecode: 620caffe60005260206000f3
+
+    Sub contract init code: 600c8060093d393df3
+
+    Total bytecode: 0x600c8060093d393df3620caffe60005260206000f3
+*/
