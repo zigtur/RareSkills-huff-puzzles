@@ -53,7 +53,7 @@
         swap3
         0x01 add
         swap3
-        sum jump        
+        sum jump
 
     end:
         0x00 mstore

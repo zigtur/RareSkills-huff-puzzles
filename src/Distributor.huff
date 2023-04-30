@@ -10,9 +10,61 @@
  *  NOTICE: The contract should revert when an unrecognized function is called
  */
 
- #define function distribute(address[]) payable returns()
+#define function distribute(address[]) payable returns()
 
 
- #define macro MAIN() = takes(0) returns(0) {
-   
- }
+#define macro MAIN() = takes(0) returns(0) {
+    // get 4 first bytes
+    0x00 calldataload
+    0xe0 shr
+
+    // distribute(address[])
+    __FUNC_SIG(distribute)
+    eq distributeLabel jumpi
+
+    // else revert
+    0x00 0x00 revert
+
+    distributeLabel:
+        // i=0
+        0x00
+        // get array size
+        0x04 calldataload
+        0x04 add
+        dup1 // save index in calldata
+        calldataload
+        swap1
+        // get value per address
+        dup2 callvalue div
+
+    distributePerAddress:
+        dup3
+        dup5
+        lt
+        iszero
+        end jumpi
+
+        swap1
+        0x20 add
+        swap1
+        0x00 0x00 0x00 0x00
+        dup5 // value to distribute
+        dup7 calldataload //address
+        gas call
+
+        // revert if error
+        iszero error jumpi
+
+        // increment i and jump for loop
+        swap3
+        0x01 add
+        swap3
+        distributePerAddress jump
+
+    end:
+        0x00 0x00 return
+
+    error:
+        0x00 0x00 revert
+
+}
